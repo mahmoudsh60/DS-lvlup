@@ -29,9 +29,9 @@ class ControllerManager {
     this._lastBatteryText = "";
   }
 
-  async requestDevice() {
+ async requestDevice() {
     try {
-      // تعديل: إزالة كافة الفلاتر لإظهار أي جهاز متصل
+      // إزالة الفلاتر تماماً للسماح لجميع الأجهزة بالظهور في القائمة
       const devices = await navigator.hid.requestDevice({
         filters: [] 
       });
@@ -39,6 +39,15 @@ class ControllerManager {
     } catch (error) {
       console.error("User cancelled or HID failed", error);
       return null;
+    }
+  }
+
+  setControllerInstance(instance) {
+    this.currentController = instance;
+    // إجبار الكود على اعتبار أي جهاز هو أصلي (Original) لتخطي رسالة الـ Clone
+    if (this.currentController) {
+        this.currentController.isClone = false;
+        console.log("Bypass: Safety check disabled.");
     }
   }
 
